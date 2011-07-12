@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs #-}
 module Control.Concurrent.Chan.Split (
     -- * Chan pairs
-      newChanPair
+      newSplitChan
     , InChan()
     , OutChan()
     -- * Write operations
@@ -35,8 +35,8 @@ data OutChan o where
 
 -- | Create corresponding read and write ends of a chan pair. Writes to the
 -- 'InChan' side can be read on the 'OutChan' side.
-newChanPair :: IO (InChan a, OutChan a)
-newChanPair = (InChan id &&& OutChan id) <$> C.newChan
+newSplitChan :: IO (InChan a, OutChan a)
+newSplitChan = (InChan id &&& OutChan id) <$> C.newChan
 
 
 
