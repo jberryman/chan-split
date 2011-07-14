@@ -1,5 +1,6 @@
-> module Data.Cofunctor
->     where
+> module Data.Cofunctor (
+>     Cofunctor(..)
+>     ) where
 
 
 This doesn't seem to be a popular class, unfortunately but it's useful for us
