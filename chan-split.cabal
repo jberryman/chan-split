@@ -28,7 +28,7 @@ Description:         A wrapper around Control.Concurrent.Chan that splits a Chan
                      To use standard Chans with these polymorphic functions,
                      import as follows:
                      .
-                     > import Control.Concurrent.Chan(Chan,dupChan,getChanContents)
+                     > import Control.Concurrent.Chan hiding (readChan,writeChan,writeList2Chan)
                      > import Control.Concurrent.Chan.Class
                      .
                      When used alongside standard Chans, the Split module can be
