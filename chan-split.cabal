@@ -21,7 +21,17 @@ Description:         A wrapper around Control.Concurrent.Chan that splits a Chan
                      useful instances ('Functor' and 'Cofunctor') on the chan
                      pairs.
                      .
-                     When used alongside standard Chans, the module can be
+                     In addition this package provides a module that defines a
+                     pair of classes 'ReadableChan' and 'WritableChan' which
+                     defines the basic methods any Chan type should provide.
+                     .
+                     To use standard Chans with these polymorphic functions,
+                     import as follows:
+                     .
+                     > import Control.Concurrent.Chan(Chan,dupChan,getChanContents)
+                     > import Control.Concurrent.Chan.Class
+                     .
+                     When used alongside standard Chans, the Split module can be
                      imported qualified like:
                      .
                      > import qualified Control.Concurrent.Chan.Split as S
@@ -61,11 +71,15 @@ Cabal-version:       >=1.2
 
 Library
   -- Modules exported by the library.
-  Exposed-modules:     Control.Concurrent.Chan.Split, Data.Cofunctor
+  Exposed-modules:     Control.Concurrent.Chan.Split
+                     , Control.Concurrent.Chan.Class
+                     , Data.Cofunctor
   
   -- Packages needed in order to build this package.
   Build-depends:       base >= 4 && < 5
   
+  ghc-options:        -Wall
+
   -- Modules not exported by this package.
   -- Other-modules:       
   

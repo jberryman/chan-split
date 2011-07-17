@@ -4,11 +4,7 @@ module Control.Concurrent.Chan.Split (
       newSplitChan
     , InChan()
     , OutChan()
-    -- * Write operations
-    , writeChan
-    , writeList2Chan
-    -- * Read operations
-    , readChan
+    -- * Utility functions:
     , getChanContents
     , dupChan     
 
@@ -18,7 +14,8 @@ import qualified Control.Concurrent.Chan as C
 import Data.Cofunctor
 import Control.Applicative
 import Control.Arrow
-
+-- provided by chan-split:
+import Control.Concurrent.Chan.Class
 
 -- TODO: test performance of this with and without fmaped / cofmaped values in
 -- comparison with standard Chan. Test to see if we can improve performance
@@ -40,24 +37,26 @@ newSplitChan = (InChan id &&& OutChan id) <$> C.newChan
 
 
 
--- | Write a value to an 'InChan'.
-writeChan :: InChan a -> a -> IO ()
-writeChan (InChan f c) = C.writeChan c . f
+instance WritableChan InChan where
+    writeChan (InChan f c) = C.writeChan c . f
+    writeList2Chan (InChan f c) = C.writeList2Chan c . map f
 
--- | Write an entire list of items to an 'InChan'.
-writeList2Chan :: InChan a -> [a] -> IO ()
-writeList2Chan (InChan f c) = C.writeList2Chan c . map f
+instance ReadableChan OutChan where
+    readChan (OutChan f c) = f <$> C.readChan c 
+
+instance Cofunctor InChan where
+    cofmap f' (InChan f c) = InChan (f . f') c
+
+instance Functor OutChan where
+    fmap f' (OutChan f c) = OutChan (f' . f) c
 
 
--- | Read the next value from the 'OutChan'.
-readChan :: OutChan a -> IO a
-readChan (OutChan f c) = f <$> C.readChan c 
+
 
 -- | Return a lazy list representing the contents of the supplied OutChan, much
 -- like System.IO.hGetContents.
 getChanContents :: OutChan a -> IO [a]
 getChanContents (OutChan f c) = map f <$> C.getChanContents c
-
 
 
 -- | Duplicate an 'OutChan': the duplicate channel begins empty, but data
@@ -75,8 +74,3 @@ mergeOutChans cs =
     ...
     -}
 
-instance Cofunctor InChan where
-    cofmap f' (InChan f c) = InChan (f . f') c
-
-instance Functor OutChan where
-    fmap f' (OutChan f c) = OutChan (f' . f) c
