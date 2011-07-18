@@ -3,6 +3,7 @@
 -- http://www.haskell.org/cabal/release/cabal-latest/doc/users-guide/authors.html#pkg-descr.
 -- The name of the package.
 Name:                chan-split
+Homepage:            http://coder.bsimmons.name/blog/2011/07/module-chan-split-released/
 
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
@@ -10,7 +11,8 @@ Name:                chan-split
 Version:             0.1.2
 
 -- A short (one-line) description of the package.
-Synopsis:            Concurrent chans split into readable and writable pairs with useful Functor instances
+Synopsis:            Concurrent Chans as read/write pairs. Also provides generic
+                     Chan, Cofunctor classes.
 
 -- A longer description of the package.
 Description:         A wrapper around Control.Concurrent.Chan that splits a Chan
