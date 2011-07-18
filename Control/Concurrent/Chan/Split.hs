@@ -7,6 +7,8 @@ module Control.Concurrent.Chan.Split (
     -- * Utility functions:
     , getChanContents
     , dupChan     
+    -- * Supporting module
+    , module Control.Concurrent.Chan.Class
 
     ) where
 
