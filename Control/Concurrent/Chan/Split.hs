@@ -1,8 +1,7 @@
-{-# LANGUAGE GADTs #-}
+{-# LANGUAGE GADTs, MultiParamTypeClasses #-}
 module Control.Concurrent.Chan.Split (
     -- * Chan pairs
-      newSplitChan
-    , InChan()
+      InChan()
     , OutChan()
     -- * Utility functions:
     , getChanContents
@@ -16,8 +15,9 @@ import qualified Control.Concurrent.Chan as C
 import Data.Cofunctor
 import Control.Applicative
 import Control.Arrow
--- provided by chan-split:
 import Control.Concurrent.Chan.Class
+
+
 
 -- TODO: test performance of this with and without fmaped / cofmaped values in
 -- comparison with standard Chan. Test to see if we can improve performance
@@ -32,18 +32,15 @@ data InChan i where
 data OutChan o where
     OutChan :: (a -> o) -> C.Chan a -> OutChan o
 
--- | Create corresponding read and write ends of a chan pair. Writes to the
--- 'InChan' side can be read on the 'OutChan' side.
-newSplitChan :: IO (InChan a, OutChan a)
-newSplitChan = (InChan id &&& OutChan id) <$> C.newChan
+instance NewSplitChan InChan OutChan where
+    -- | Create corresponding read and write ends of a chan pair. Writes to the
+    -- 'InChan' side can be read on the 'OutChan' side.
+    newSplitChan = (InChan id &&& OutChan id) <$> C.newChan
 
 
-
-instance WritableChan InChan where
+instance SplitChan InChan OutChan where
     writeChan (InChan f c) = C.writeChan c . f
     writeList2Chan (InChan f c) = C.writeList2Chan c . map f
-
-instance ReadableChan OutChan where
     readChan (OutChan f c) = f <$> C.readChan c 
 
 instance Cofunctor InChan where
@@ -74,5 +71,5 @@ mergeOutChans :: [OutChan a] -> IO (OutChan a)
 mergeOutChans cs = 
     as <- mapM C.getChanContents cs
     ...
-    -}
+-}
 
