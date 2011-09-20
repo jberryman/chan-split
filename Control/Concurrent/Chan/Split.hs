@@ -12,16 +12,16 @@ module Control.Concurrent.Chan.Split (
     ) where
 
 import qualified Control.Concurrent.Chan as C
-import Data.Cofunctor
+import Data.Functor.Contravariant
 import Control.Applicative
 import Control.Arrow
 import Control.Concurrent.Chan.Class
 
 
 
--- TODO: test performance of this with and without fmaped / cofmaped values in
+-- TODO: test performance of this with and without fmaped / contramap values in
 -- comparison with standard Chan. Test to see if we can improve performance
--- using special constructor for fmaped / cofmaped version
+-- using special constructor for fmaped / contramap version
 
 
 -- | The "write side" of a chan pair
@@ -43,8 +43,8 @@ instance SplitChan InChan OutChan where
     writeList2Chan (InChan f c) = C.writeList2Chan c . map f
     readChan (OutChan f c) = f <$> C.readChan c 
 
-instance Cofunctor InChan where
-    cofmap f' (InChan f c) = InChan (f . f') c
+instance Contravariant InChan where
+    contramap f' (InChan f c) = InChan (f . f') c
 
 instance Functor OutChan where
     fmap f' (OutChan f c) = OutChan (f' . f) c
