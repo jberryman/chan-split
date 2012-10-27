@@ -8,7 +8,7 @@ Homepage:            http://brandon.si/code/module-chan-split-released/
 -- The package version. See the Haskell package versioning policy
 -- (http://www.haskell.org/haskellwiki/Package_versioning_policy) for
 -- standards guiding when and how versions should be incremented.
-Version:             0.4.0
+Version:             0.5.0
 
 -- A short (one-line) description of the package.
 Synopsis:            Concurrent Chans as read/write pairs. Also provides generic
@@ -51,13 +51,13 @@ Description:         An implementation of concurrent channels identical to
                      .
                      This module is used internally by the "simple-actors" package.
                      .
-                     /CHANGES/: 0.3.0 -> 0.4.0  
+                     /CHANGES/: 0.4.0 -> 0.5.0  
                      . 
-                     - In\/OutChans now implemented from scratch (after Leon P Smith's implementation)
-                     . 
-                     - no longer implement Functor\/Contravariant instances; drop contravariant dependency
-                     . 
-                     - implement Eq and Typeable instances
+                     - modify TChan v2.4 code into split version
+                     .
+                     - depend on STM
+                     .
+                     - clean up Extensions section and broken links
                      . 
 
 
@@ -97,13 +97,14 @@ Library
                      -- for the split chan class:
   Extensions:          MultiParamTypeClasses
                      , FunctionalDependencies 
-                     -- for Functor / Contravariant instances:
-                     , GADTs
 
   Exposed-modules:     Control.Concurrent.Chan.Split
                      , Control.Concurrent.Chan.Class
+                     , Control.Concurrent.STM.TChan.Class
+                     , Control.Concurrent.STM.TChan.Split
   
   Build-depends:       base >= 4 && < 5
+                     , stm > 2 && < 3
   
   ghc-options:        -Wall
 
